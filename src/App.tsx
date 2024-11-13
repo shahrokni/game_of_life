@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   CanvasContainer,
   GOLCanvas,
@@ -10,6 +10,8 @@ import {
 function App() {
   const COLUMNS = 150;
   const ROWS = 150;
+
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const [cells, setCells] = useState<Array<Array<number>> | undefined>(
     undefined
@@ -29,14 +31,19 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (!cells?.length) return;
-  }, [cells]);
+    if (!cells?.length || !canvasRef.current) return;
+
+    const canvas = canvasRef.current;
+    const gl = canvas.getContext("webgl");
+
+    if (!gl) return;
+  }, [cells, canvasRef]);
 
   return (
     <MainContainer>
       <Title>Game of life</Title>
       <CanvasContainer>
-        <GOLCanvas id="gol-canvas"></GOLCanvas>
+        <GOLCanvas ref={canvasRef}></GOLCanvas>
       </CanvasContainer>
       <MenuContainer></MenuContainer>
     </MainContainer>
