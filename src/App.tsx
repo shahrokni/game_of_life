@@ -1,25 +1,45 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import {
+  CanvasContainer,
+  GOLCanvas,
+  MainContainer,
+  MenuContainer,
+  Title,
+} from "./styled";
 
 function App() {
+  const COLUMNS = 150;
+  const ROWS = 150;
+
+  const [cells, setCells] = useState<Array<Array<number>> | undefined>(
+    undefined
+  );
+
+  useEffect(() => {
+    const rows: Array<Array<number>> = [];
+
+    for (let i = 0; i < ROWS; i += 1) {
+      const cols: Array<number> = [];
+      for (let j = 0; j < COLUMNS; j += 1) {
+        cols[j] = 0;
+      }
+      rows[i] = cols;
+    }
+    setCells(rows);
+  }, []);
+
+  useEffect(() => {
+    if (!cells?.length) return;
+  }, [cells]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <MainContainer>
+      <Title>Game of life</Title>
+      <CanvasContainer>
+        <GOLCanvas id="gol-canvas"></GOLCanvas>
+      </CanvasContainer>
+      <MenuContainer></MenuContainer>
+    </MainContainer>
   );
 }
 
